@@ -10,7 +10,28 @@ db = client["my_database"]
 collection = db["users"]
 
 #insert an example
-doc = {"name": "Omer", "age": 26}
-collection.insert_one(doc)
+doc = {"username": "Alex123",
+       "password": "123456",
+       "email": "alex@gmail.com",
+       "movies": []}
+# collection.insert_one(doc)
 
-print("Inserted one document!")
+# print("Inserted one document!")
+
+def findprofile(email):
+    return collection.find_one({"email": email})
+
+def signup(email,password):
+    collection.insert_one({"email": email,
+                           "password": password,
+                           "movies": []})
+
+def login(email,password):
+    return collection.find_one({"email": email,
+                                "password": password})
+
+if __name__ == "__main__":
+    if findprofile("jane@affbc.com"):
+        print("False")
+    else:
+        print("True")
