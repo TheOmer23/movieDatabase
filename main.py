@@ -1,6 +1,9 @@
 from passwords import uri
 from pymongo import MongoClient
+import bcrypt
+import requests
 
+omdb_key = "http://www.omdbapi.com/?apikey=641cb94e&"
 # uri =  "mongodb+srv://omer3199_db_user:Aa123456@users.qdpzz3w.mongodb.net/"
 
 client = MongoClient(uri)
@@ -8,30 +11,30 @@ client = MongoClient(uri)
 # Choose a database and collection
 db = client["my_database"]
 collection = db["users"]
-
-#insert an example
-doc = {"username": "Alex123",
-       "password": "123456",
-       "email": "alex@gmail.com",
-       "movies": []}
-# collection.insert_one(doc)
-
-# print("Inserted one document!")
-
-def findprofile(email):
-    return collection.find_one({"email": email})
+movie_collection = db["movies"]
 
 def signup(email,password):
+    password = hash_password(password)
     collection.insert_one({"email": email,
                            "password": password,
-                           "movies": []})
+                           "movie names": []})
 
 def login(email,password):
-    return collection.find_one({"email": email,
-                                "password": password})
-
-if __name__ == "__main__":
-    if findprofile("jane@affbc.com"):
-        print("False")
+    profile = collection.find_one({"email": email})
+    if not profile:
+        return None
+    hashed_password = profile["password"]
+    print(hashed_password)
+    if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
+        return profile
     else:
-        print("True")
+        return None
+    
+def hash_password(password):
+    hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+    return hashed_password
+
+
+
+# if __name__ == "__main__":
+    
