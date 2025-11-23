@@ -1,11 +1,9 @@
-from passwords import uri
+from passwords import uri, api_key
 from pymongo import MongoClient
 import bcrypt
 import requests
 
-omdb_key = "http://www.omdbapi.com/?apikey=641cb94e&"
-# uri =  "mongodb+srv://omer3199_db_user:Aa123456@users.qdpzz3w.mongodb.net/"
-
+omdb_key = api_key
 client = MongoClient(uri)
 
 # Choose a database and collection
@@ -13,14 +11,17 @@ db = client["my_database"]
 collection = db["users"]
 movie_collection = db["movies"]
 
+def find_profile(email):
+    return collection.find_one({"email": email})
+
 def signup(email,password):
     password = hash_password(password)
     collection.insert_one({"email": email,
                            "password": password,
-                           "movie names": []})
+                           "movies": []})
 
 def login(email,password):
-    profile = collection.find_one({"email": email})
+    profile = find_profile(email)
     if not profile:
         return None
     hashed_password = profile["password"]
@@ -34,7 +35,25 @@ def hash_password(password):
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
     return hashed_password
 
+def add_movie_to_watchlist(email, movie_name) -> None:
+    if not find_profile(email):
+        return None
+    try:
+        response = requests.get(f"http://www.omdbapi.com/?{api_key}&t={movie_name}")
+        movie_data = response.json()
+        if movie_data["Response"] == "False":
+            raise ValueError(f"Movie '{movie_name}' not found!")
+        else:
+            collection.update_one({"email": email}
+                                  ,{"$addToSet": {"movies":movie_name}}) 
+    except Exception as e:
+        print(f"Error: {e}")
+    return None
+    
 
 
-# if __name__ == "__main__":
+
+if __name__ == "__main__":
+    add_movie_to_watchlist("omer3199@gmail.com", "Ted4545")
+    # print(type(login("omer3199@gmail.com", "123456")))
     
