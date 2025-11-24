@@ -46,6 +46,8 @@ def add_movie_to_watchlist(email, movie_name) -> None:
         else:
             collection.update_one({"email": email}
                                   ,{"$addToSet": {"movies":movie_name}}) 
+            if not movie_collection.find_one({"Title": movie_name}):
+                movie_collection.insert_one(movie_data)
     except Exception as e:
         print(f"Error: {e}")
     return None
@@ -54,6 +56,6 @@ def add_movie_to_watchlist(email, movie_name) -> None:
 
 
 if __name__ == "__main__":
-    add_movie_to_watchlist("omer3199@gmail.com", "Ted4545")
+    add_movie_to_watchlist("omer3199@gmail.com", "ted")
     # print(type(login("omer3199@gmail.com", "123456")))
     
