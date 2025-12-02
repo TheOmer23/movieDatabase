@@ -15,6 +15,8 @@ def find_profile(email):
     return collection.find_one({"email": email})
 
 def signup(email,password):
+    if collection.find_one(email):
+        raise ValueError(f"{email} user already exists")
     password = hash_password(password)
     collection.insert_one({"email": email,
                            "password": password,
@@ -25,7 +27,6 @@ def login(email,password):
     if not profile:
         return None
     hashed_password = profile["password"]
-    print(hashed_password)
     if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
         return profile
     else:
@@ -52,10 +53,23 @@ def add_movie_to_watchlist(email, movie_name) -> None:
         print(f"Error: {e}")
     return None
     
+def movie_check(movie_name):
+    try:
+        response = requests.get(f"http://www.omdbapi.com/?{api_key}&t={movie_name}")
+        movie_data = response.json()
+        if movie_data["Response"] == "False":
+            raise ValueError(f"Movie '{movie_name}' not found!")
 
-
+    except Exception as e:
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
-    add_movie_to_watchlist("omer3199@gmail.com", "ted")
-    # print(type(login("omer3199@gmail.com", "123456")))
+    email = input("Enter email:")
+    password = input("Enter Password:")
+    if login(email,password):
+        movie = input("Enter a movie to watchlist:")
+        add_movie_to_watchlist(email, movie)
+    else:
+        signup(email,password)
+    # print(login("omer3199@gmail.com", "123456"))
     
