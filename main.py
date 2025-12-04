@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import bcrypt
 import requests
 
+
 omdb_key = api_key
 client = MongoClient(uri)
 
@@ -62,6 +63,7 @@ def movie_check(movie_name):
 
     except Exception as e:
         print(f"Error: {e}")
+        
 
 if __name__ == "__main__":
     email = input("Enter email:")
