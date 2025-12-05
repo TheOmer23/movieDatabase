@@ -16,7 +16,10 @@ def find_profile(email):
     return collection.find_one({"email": email})
 
 def signup(email,password):
-    if collection.find_one(email):
+    if not email or not password:
+        raise ValueError("Email and password are required")
+    # Correct check: look for a document with {'email': email}
+    if collection.find_one({"email": email}):
         raise ValueError(f"{email} user already exists")
     password = hash_password(password)
     collection.insert_one({"email": email,
@@ -68,10 +71,6 @@ def movie_check(movie_name):
 if __name__ == "__main__":
     email = input("Enter email:")
     password = input("Enter Password:")
-    if login(email,password):
-        movie = input("Enter a movie to watchlist:")
-        add_movie_to_watchlist(email, movie)
-    else:
-        signup(email,password)
+    print(signup(email,password))
     # print(login("omer3199@gmail.com", "123456"))
     
