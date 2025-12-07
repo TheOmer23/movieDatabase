@@ -26,6 +26,7 @@
                     </li>
                 </ul>
             </div>
+            <!-- Movie results appear BELOW the search bar, not here anymore -->
     </nav>
 
     <!-- Search Bar -->
@@ -40,6 +41,26 @@
             </div>
         </div>
     </div>
+    <!--poster grid-->
+    {% if posters %}
+    <div class="container mt-4">
+        <h3>Results for "{{ movie_name }}"</h3>
+        <div class="row">
+            {% for poster in posters %}
+            <div class="col-md-3 col-sm-4 col-6 mb-4">
+                <div class="card">
+                    {% if poster != "N/A" %}
+                    <img src="{{ poster }}" class="card-img-top" alt="Movie Poster">
+                    {% else %}
+                    <img src="https://via.placeholder.com/300x450?text=No+Image" class="card-img-top">
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
 </body>
 
 </html>

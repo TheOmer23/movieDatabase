@@ -59,18 +59,37 @@ def add_movie_to_watchlist(email, movie_name) -> None:
     
 def movie_check(movie_name):
     try:
-        response = requests.get(f"http://www.omdbapi.com/?{api_key}&t={movie_name}")
+        response = requests.get(f"http://www.omdbapi.com/?{api_key}&s={movie_name}")
         movie_data = response.json()
         if movie_data["Response"] == "False":
             raise ValueError(f"Movie '{movie_name}' not found!")
-
+        return movie_data
     except Exception as e:
         print(f"Error: {e}")
+        return None
+        
+def get_movie_poster(movie_name):
+    try:
+        response = requests.get(f"http://www.omdbapi.com/?{api_key}&s={movie_name}")
+        movie_data = response.json()
+        if movie_data["Response"] == "False":
+            raise ValueError(f"Movie '{movie_name}' not found!")
+        else:
+            posters = []
+            for movie in movie_data["Search"]:
+                if movie_name.lower() in movie["Title"].lower():
+                    posters.append(movie["Poster"])
+            return posters
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
         
 
 if __name__ == "__main__":
-    email = input("Enter email:")
-    password = input("Enter Password:")
-    print(signup(email,password))
+    # email = input("Enter email:")
+    # password = input("Enter Password:")
+    # print(signup(email,password))
+    print(get_movie_poster("ted"))
+    # print(movie_check("batman"))
     # print(login("omer3199@gmail.com", "123456"))
     
