@@ -89,7 +89,7 @@ if __name__ == "__main__":
     # email = input("Enter email:")
     # password = input("Enter Password:")
     # print(signup(email,password))
-    print(get_movie_poster("ted"))
+    print(movie_check("ted"))
     # print(movie_check("batman"))
     # print(login("omer3199@gmail.com", "123456"))
     

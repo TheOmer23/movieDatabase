@@ -58,9 +58,14 @@
                             {% endif %}
                         </div>
                     </button>
-                    <!-- Pass all movie data as hidden inputs -->
+
+                    <!-- index of the current movie -->
                     {% set idx = loop.index0 %}
-                    <input type="hidden" name="poster" value="{{ poster }}">
+
+                    <!-- poster itself -->
+                    <input type="hidden" name="Poster" value="{{ poster }}">
+
+                    <!-- all other movie fields from movie_data -->
                     {% if movie_data and movie_data.Search and movie_data.Search[idx] %}
                     {% for key, value in movie_data.Search[idx].items() %}
                     {% if value is string %}
@@ -72,7 +77,10 @@
             </div>
             {% endfor %}
         </div>
-        {% endif %}
+    </div>
+    {% endif %}
+
+
     </div>
 
 </body>
