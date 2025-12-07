@@ -1,3 +1,4 @@
+# from crypt import methods
 from flask import Flask
 from flask import render_template
 from flask import request, redirect, url_for, flash
@@ -30,19 +31,22 @@ def signup_route():
 
 @app.route("/", methods=["GET", "POST"])
 def search_route():
-    if request.method == "POST":
-        movie_name = request.form.get("movie_name")
     return render_template("search.html")
 
 @app.route("/search", methods=["GET"])
 def search():
     movie_name = request.args.get("movie_name")
     posters = None
-
     if movie_name:
         posters = get_movie_poster(movie_name)
-
     return render_template("search.html", posters=posters, movie_name=movie_name)
+
+@app.route("/movie_page", methods=["GET"])
+def movie_page():
+    
+    return render_template("movie_page.html")
+    
+    
 
 
 if __name__ == "__main__":

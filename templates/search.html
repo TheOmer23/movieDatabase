@@ -48,18 +48,32 @@
         <div class="row">
             {% for poster in posters %}
             <div class="col-md-3 col-sm-4 col-6 mb-4">
-                <div class="card">
-                    {% if poster != "N/A" %}
-                    <img src="{{ poster }}" class="card-img-top" alt="Movie Poster">
-                    {% else %}
-                    <img src="https://via.placeholder.com/300x450?text=No+Image" class="card-img-top">
+                <form method="get" action="/movie_page">
+                    <button type="submit" style="border: none; background: none; padding: 0; width: 100%;">
+                        <div class="card">
+                            {% if poster != "N/A" %}
+                            <img src="{{ poster }}" class="card-img-top" alt="Movie Poster">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x450?text=No+Image" class="card-img-top">
+                            {% endif %}
+                        </div>
+                    </button>
+                    <!-- Pass all movie data as hidden inputs -->
+                    {% set idx = loop.index0 %}
+                    <input type="hidden" name="poster" value="{{ poster }}">
+                    {% if movie_data and movie_data.Search and movie_data.Search[idx] %}
+                    {% for key, value in movie_data.Search[idx].items() %}
+                    {% if value is string %}
+                    <input type="hidden" name="{{ key }}" value="{{ value|e }}">
                     {% endif %}
-                </div>
+                    {% endfor %}
+                    {% endif %}
+                </form>
             </div>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
-    {% endif %}
 
 </body>
 
